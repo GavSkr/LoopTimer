@@ -1,0 +1,3 @@
+# LoopTimer
+
+Simple loop timer
