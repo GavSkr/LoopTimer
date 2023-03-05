@@ -58,6 +58,10 @@ namespace LoopTimer {
 	public:
 		String^ hour{ "00" };
 		String^ minute{ "00" };
+	private: System::Windows::Forms::CheckBox^ checkBox_TopMost;
+	public:
+
+	public:
 		String^ second{ "00" };
 
 		int checkTime(String^ hour);
@@ -72,6 +76,12 @@ namespace LoopTimer {
 		int r_hour = 0;
 		int r_minute = 0;
 		int r_second = 0;
+
+		float kWight = 1.0;
+		float kHeight = 1.0;
+		float TimerFontSize = 45.0;
+		float temp = 0.0;
+		float temp1 = 0.0;
 
 		Char^ c = gcnew Char();
 
@@ -104,6 +114,7 @@ namespace LoopTimer {
 			this->button_Pause = (gcnew System::Windows::Forms::Button());
 			this->timer = (gcnew System::Windows::Forms::Timer(this->components));
 			this->panel1 = (gcnew System::Windows::Forms::Panel());
+			this->checkBox_TopMost = (gcnew System::Windows::Forms::CheckBox());
 			this->label_CountRepeat = (gcnew System::Windows::Forms::Label());
 			this->label4 = (gcnew System::Windows::Forms::Label());
 			this->panel2 = (gcnew System::Windows::Forms::Panel());
@@ -114,11 +125,12 @@ namespace LoopTimer {
 			// label_Timer
 			// 
 			this->label_Timer->Dock = System::Windows::Forms::DockStyle::Fill;
-			this->label_Timer->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 120, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
+			this->label_Timer->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 45, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(204)));
 			this->label_Timer->Location = System::Drawing::Point(0, 0);
 			this->label_Timer->Name = L"label_Timer";
-			this->label_Timer->Size = System::Drawing::Size(758, 385);
+			this->label_Timer->RightToLeft = System::Windows::Forms::RightToLeft::No;
+			this->label_Timer->Size = System::Drawing::Size(294, 191);
 			this->label_Timer->TabIndex = 0;
 			this->label_Timer->Text = L"00:00:00";
 			this->label_Timer->TextAlign = System::Drawing::ContentAlignment::MiddleCenter;
@@ -239,6 +251,7 @@ namespace LoopTimer {
 			// 
 			// panel1
 			// 
+			this->panel1->Controls->Add(this->checkBox_TopMost);
 			this->panel1->Controls->Add(this->label_CountRepeat);
 			this->panel1->Controls->Add(this->label4);
 			this->panel1->Controls->Add(this->textBox_Minute);
@@ -253,10 +266,21 @@ namespace LoopTimer {
 			this->panel1->Controls->Add(this->label2);
 			this->panel1->Controls->Add(this->label1);
 			this->panel1->Dock = System::Windows::Forms::DockStyle::Bottom;
-			this->panel1->Location = System::Drawing::Point(0, 385);
+			this->panel1->Location = System::Drawing::Point(0, 191);
 			this->panel1->Name = L"panel1";
-			this->panel1->Size = System::Drawing::Size(758, 80);
+			this->panel1->Size = System::Drawing::Size(294, 80);
 			this->panel1->TabIndex = 12;
+			// 
+			// checkBox_TopMost
+			// 
+			this->checkBox_TopMost->AutoSize = true;
+			this->checkBox_TopMost->Location = System::Drawing::Point(221, 57);
+			this->checkBox_TopMost->Name = L"checkBox_TopMost";
+			this->checkBox_TopMost->Size = System::Drawing::Size(71, 17);
+			this->checkBox_TopMost->TabIndex = 14;
+			this->checkBox_TopMost->Text = L"Top Most";
+			this->checkBox_TopMost->UseVisualStyleBackColor = true;
+			this->checkBox_TopMost->CheckStateChanged += gcnew System::EventHandler(this, &MyForm::checkBox_TopMost_CheckStateChanged);
 			// 
 			// label_CountRepeat
 			// 
@@ -282,7 +306,7 @@ namespace LoopTimer {
 			this->panel2->Dock = System::Windows::Forms::DockStyle::Fill;
 			this->panel2->Location = System::Drawing::Point(0, 0);
 			this->panel2->Name = L"panel2";
-			this->panel2->Size = System::Drawing::Size(758, 385);
+			this->panel2->Size = System::Drawing::Size(294, 191);
 			this->panel2->TabIndex = 13;
 			// 
 			// MyForm
@@ -291,14 +315,16 @@ namespace LoopTimer {
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 			this->AutoSize = true;
 			this->BackColor = System::Drawing::SystemColors::Control;
-			this->ClientSize = System::Drawing::Size(758, 465);
+			this->ClientSize = System::Drawing::Size(294, 271);
 			this->Controls->Add(this->panel2);
 			this->Controls->Add(this->panel1);
 			this->Icon = (cli::safe_cast<System::Drawing::Icon^>(resources->GetObject(L"$this.Icon")));
+			this->MinimumSize = System::Drawing::Size(310, 310);
 			this->Name = L"MyForm";
 			this->RightToLeftLayout = true;
 			this->StartPosition = System::Windows::Forms::FormStartPosition::CenterScreen;
 			this->Text = L"Loop Timer";
+			this->SizeChanged += gcnew System::EventHandler(this, &MyForm::MyForm_SizeChanged);
 			this->panel1->ResumeLayout(false);
 			this->panel1->PerformLayout();
 			this->panel2->ResumeLayout(false);
@@ -306,7 +332,7 @@ namespace LoopTimer {
 
 		}
 #pragma endregion
-	private: System::Void button_Start_Click(System::Object^ sender, System::EventArgs^ e) {
+private: System::Void button_Start_Click(System::Object^ sender, System::EventArgs^ e) {
 		if (b_pause)
 		{
 			timer->Enabled = true;
@@ -505,6 +531,30 @@ private: System::Void textBox_Repeat_KeyPress(System::Object^ sender, System::Wi
 	if ((e->KeyChar == '.'))// && (textBox_Hour->Text->IndexOf('.') > -1))
 	{
 		e->Handled = true;
+	}
+}
+
+private: System::Void checkBox_TopMost_CheckStateChanged(System::Object^ sender, System::EventArgs^ e) {
+	if (checkBox_TopMost->Checked)
+		this->TopMost = true;
+	else
+		this->TopMost = false;
+}
+
+private: System::Void MyForm_SizeChanged(System::Object^ sender, System::EventArgs^ e) {
+	
+	kWight = this->Size.Width / this->MinimumSize.Width;
+	kHeight = this->Size.Height / this->MinimumSize.Height;
+
+	temp = TimerFontSize * ((kHeight >= kWight)? kHeight : kWight);
+
+	if (kWight > 1.0 && kHeight > 1.0)
+	{
+		label_Timer->Font = gcnew System::Drawing::Font(label_Timer->Font->OriginalFontName, temp, FontStyle::Bold);
+	}
+	else
+	{
+		label_Timer->Font = gcnew System::Drawing::Font(label_Timer->Font->OriginalFontName, 45, FontStyle::Bold);
 	}
 }
 };
